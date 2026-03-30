@@ -2,7 +2,7 @@ import "./Sidebar.css";
 import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import { v1 as uuidv1 } from "uuid";
-
+import imageLogo from "./assets/blacklogo.png";
 function Sidebar() {
   const {
     allThreads,
@@ -84,11 +84,7 @@ function Sidebar() {
   return (
     <section className="sidebar">
       <button onClick={createNewChat}>
-        <img
-          src="src/assets/blacklogo.png"
-          alt="gpt logo"
-          className="logo"
-        ></img>
+        <img src={imageLogo} alt="gpt logo" className="logo"></img>
         <span>
           <i className="fa-solid fa-pen-to-square"></i>
         </span>
