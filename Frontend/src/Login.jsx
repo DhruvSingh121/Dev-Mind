@@ -13,7 +13,7 @@ function Login({ setIsLogin, setLogin }) {
         return;
       }
 
-      const res = await fetch("http://localhost:8080/api/auth/login", {
+      const res = await fetch("https://dev-mind.onrender.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
