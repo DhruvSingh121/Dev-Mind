@@ -39,7 +39,7 @@ router.get("/thread/:threadId", async (req, res) => {
     const thread = await Thread.findOne({ threadId });
 
     if (!thread) {
-      res.status(404).json({ error: "Thread not found" });
+      return res.status(404).json({ error: "Thread not found" });
     }
 
     res.json(thread.messages);
@@ -56,7 +56,7 @@ router.delete("/thread/:threadId", async (req, res) => {
     const deletedThread = await Thread.findOneAndDelete({ threadId });
 
     if (!deletedThread) {
-      res.status(404).json({ error: "Thread not found" });
+      return res.status(404).json({ error: "Thread not found" });
     }
 
     res.status(200).json({ success: "Thread deleted successfully" });
@@ -87,7 +87,14 @@ router.post("/chat", async (req, res) => {
       thread.messages.push({ role: "user", content: message });
     }
 
-    const assistantReply = await getOpenAIAPIResponse(message);
+    let assistantReply;
+
+    try {
+      assistantReply = await getOpenAIAPIResponse(message);
+    } catch (err) {
+      console.error("OPENAI ERROR:", err.message);
+      assistantReply = "Sorry, something went wrong. Please try again.";
+    }
 
     thread.messages.push({ role: "assistant", content: assistantReply });
     thread.updatedAt = new Date();
@@ -95,7 +102,7 @@ router.post("/chat", async (req, res) => {
     await thread.save();
     res.json({ reply: assistantReply });
   } catch (err) {
-    console.log(err);
+    console.error("CHAT ERROR:", err.message);
     res.status(500).json({ error: "something went wrong" });
   }
 });
