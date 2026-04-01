@@ -87,7 +87,7 @@ function SignUp({ setIsLogin, setLogin }) {
             {icon}
           </button>
         </div>
-        <button id="submitBtn" onClick={handleSignUp}>
+        <button id="submitBtn" className="submitBtn " onClick={handleSignUp}>
           Submit
         </button>
         <div className="authChecher">
