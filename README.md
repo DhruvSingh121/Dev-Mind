@@ -54,9 +54,13 @@ npm install
 Create a .env file inside the server folder:
 
 GEMINI_API_KEY=your_api_key
+
 MONGO_URI=your_mongodb_uri
+
 JWT_SECRET=your_secret
+
 ▶️ Run Locally
+
 # Start backend (from server folder)
 npm run dev
 
