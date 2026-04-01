@@ -2,9 +2,22 @@ import React from "react";
 import "./AuthPage.css";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { Eye, EyeOff } from "lucide-react";
 function Login({ setIsLogin, setLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [inputType, setInputType] = useState("password");
+  const [icon, setIcon] = useState(<EyeOff />);
+
+  const handleToggle = () => {
+    if (inputType == "password") {
+      setInputType("text");
+      setIcon(<Eye />);
+    } else {
+      setInputType("password");
+      setIcon(<EyeOff />);
+    }
+  };
 
   const handleLogin = async () => {
     try {
@@ -62,13 +75,19 @@ function Login({ setIsLogin, setLogin }) {
           onChange={(e) => setUsername(e.target.value)}
         />
 
-        <input
-          type="password"
-          id="password"
-          className="signInput"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="passBox">
+          <input
+            type={inputType}
+            id="password"
+            className="signInput"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="eyeButton" onClick={handleToggle}>
+            {" "}
+            {icon}
+          </button>
+        </div>
         <button className="submitBtn" onClick={handleLogin}>
           Submit
         </button>

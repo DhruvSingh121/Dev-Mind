@@ -1,10 +1,23 @@
 import React from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { Eye, EyeOff } from "lucide-react";
 function SignUp({ setIsLogin, setLogin }) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [inputType, setInputType] = useState("password");
+  const [icon, setIcon] = useState(<EyeOff />);
+
+  const handleTogele = () => {
+    if (inputType == "password") {
+      setInputType("text");
+      setIcon(<EyeOff />);
+    } else {
+      setInputType("password");
+      setIcon(<Eye />);
+    }
+  };
 
   const handleSignUp = async () => {
     try {
@@ -54,14 +67,27 @@ function SignUp({ setIsLogin, setLogin }) {
           onChange={(e) => setUsername(e.target.value)}
         />
 
-        <input
-          type="password"
-          id="password"
-          className="signInput"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="submitBtn" onClick={handleSignUp}>
+        <div className="passBox">
+          <input
+            type={inputType}
+            id="password"
+            className="signInput"
+            placeholder="Password"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+          <button
+            className="eyeButton"
+            onClick={handleTogele}
+            aria-label={
+              inputType === "password" ? "Show password" : "Hide password"
+            }
+          >
+            {icon}
+          </button>
+        </div>
+        <button id="submitBtn" onClick={handleSignUp}>
           Submit
         </button>
         <div className="authChecher">
