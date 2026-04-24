@@ -3,10 +3,10 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 
 function AuthRight({ setIsLogin }) {
-  const [isLogin, setLogin] = useState(true); // UI toggle
+  const [isLogin, setLogin] = useState(true);
 
   return (
-    <div>
+    <div className="rightContainer">
       {isLogin ? (
         <Login setIsLogin={setIsLogin} setLogin={setLogin} />
       ) : (

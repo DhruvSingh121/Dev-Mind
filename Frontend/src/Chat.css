@@ -1,51 +1,168 @@
+/* ── Chat scroll container ─────────────────────── */
 .chats {
-  max-width: 700px;
+  flex: 1;
   overflow-y: auto;
-  padding: 8rem;
+  overflow-x: hidden;
+  padding: 24px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+  scroll-behavior: smooth;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Scrollbar Styling */
 .chats::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
 }
-
 .chats::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .chats::-webkit-scrollbar-thumb {
-  background: #3a3a3a;
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
-.chats::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
+/* ── Message rows ──────────────────────────────── */
 .userDiv {
   display: flex;
   justify-content: flex-end;
-  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+  animation: msgIn 0.22s ease;
 }
 
 .gptDiv {
-  text-align: left;
-  font-size: 0.9rem;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  animation: msgIn 0.22s ease;
 }
 
+@keyframes msgIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── User bubble ───────────────────────────────── */
 .userMessage {
-  background-color: #323232;
-  padding: 10px 20px;
-  border-radius: 14px;
-  margin-left: 15rem;
-  max-width: 500px;
-  width: fit-content;
-}
-
-.hljs {
-  border-radius: 14px !important;
-}
-
-pre {
+  max-width: 72%;
+  min-width: 0;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #ff6600, #ff8c00);
+  border-radius: 18px 18px 4px 18px;
+  font-size: 14.5px;
+  font-family: "DM Sans", sans-serif;
+  color: #ffffff;
+  line-height: 1.65;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
+  word-break: normal;
+}
+
+/* ── GPT bubble ────────────────────────────────── */
+.gptDiv > div {
+  max-width: 80%;
+  min-width: 0;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px 18px 18px 4px;
+  font-size: 14.5px;
+  font-family: "DM Sans", sans-serif;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.8;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  min-width: 60px;
+}
+
+/* ── Markdown inside GPT bubble ────────────────── */
+.gptDiv > div p {
+  margin: 0 0 10px;
+}
+.gptDiv > div p:last-child {
+  margin-bottom: 0;
+}
+
+.gptDiv > div pre {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.gptDiv > div code {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 13px;
+  font-family: monospace;
+}
+
+.gptDiv > div pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.gptDiv > div ul,
+.gptDiv > div ol {
+  padding-left: 22px;
+  margin: 8px 0;
+}
+
+.gptDiv > div li {
+  margin-bottom: 5px;
+}
+
+.gptDiv > div h1,
+.gptDiv > div h2,
+.gptDiv > div h3 {
+  font-family: "Syne", sans-serif;
+  color: #fff;
+  margin: 16px 0 6px;
+}
+
+.gptDiv > div strong {
+  color: #ffffff;
+}
+.gptDiv > div a {
+  color: #ff9940;
+}
+.gptDiv > div blockquote {
+  border-left: 3px solid rgba(255, 102, 0, 0.5);
+  padding-left: 12px;
+  margin: 8px 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Mobile ────────────────────────────────────── */
+@media (max-width: 640px) {
+  .chats {
+    padding: 16px 12px 8px;
+  }
+  .userMessage {
+    max-width: 86%;
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+  .gptDiv > div {
+    max-width: 92%;
+    font-size: 14px;
+    padding: 12px 14px;
+  }
 }

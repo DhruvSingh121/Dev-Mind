@@ -1,13 +1,17 @@
 import React from "react";
 import AuthLeft from "./AuthLeft";
-import "./AuthPage.css";
 import AuthRight from "./AuthRight";
+import "./AuthPage.css";
+
 function AuthPage({ setIsLogin }) {
   return (
-    <div className="container">
-      <AuthLeft />
-      <AuthRight setIsLogin={setIsLogin} />
-    </div>
+    <main className="container" role="main" aria-label="DevMind authentication">
+      <div className="orbRight" aria-hidden="true" />
+      <div className="authWrapper">
+        <AuthLeft />
+        <AuthRight setIsLogin={setIsLogin} />
+      </div>
+    </main>
   );
 }
 

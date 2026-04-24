@@ -18,12 +18,13 @@ function App() {
   const [newChat, setNewChat] = useState(true);
   const [allThreads, setAllThreads] = useState([]);
 
-  // ✅ check token on refresh
+  // Mobile sidebar open/close state
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Check token on refresh — restore login session
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setIsLogin(true);
-    }
+    if (token) setIsLogin(true);
   }, []);
 
   const providerValues = {
@@ -43,14 +44,33 @@ function App() {
 
   return (
     <div className="app">
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="dark"
+        toastStyle={{
+          background: "#1a1a1a",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: "12px",
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: "13.5px",
+        }}
+      />
 
       {!isLogin ? (
         <AuthPage setIsLogin={setIsLogin} />
       ) : (
         <MyContext.Provider value={providerValues}>
-          <Sidebar />
-          <ChatWindow setIsLogin={setIsLogin} />
+          <div className="appRoot">
+            <Sidebar
+              isOpen={sidebarOpen}
+              onClose={() => setSidebarOpen(false)}
+            />
+            <ChatWindow
+              setIsLogin={setIsLogin}
+              onMenuClick={() => setSidebarOpen((prev) => !prev)}
+            />
+          </div>
         </MyContext.Provider>
       )}
     </div>

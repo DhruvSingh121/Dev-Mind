@@ -1,104 +1,137 @@
-import React from "react";
-import "./AuthPage.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, User, Lock, ArrowRight } from "lucide-react";
+
 function Login({ setIsLogin, setLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [inputType, setInputType] = useState("password");
-  const [icon, setIcon] = useState(<EyeOff />);
+  const [showPw, setShowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleToggle = () => {
-    if (inputType == "password") {
-      setInputType("text");
-      setIcon(<Eye />);
-    } else {
-      setInputType("password");
-      setIcon(<EyeOff />);
-    }
+    setShowPw((prev) => !prev);
+    setInputType((prev) => (prev === "password" ? "text" : "password"));
   };
 
   const handleLogin = async () => {
+    if (!username.trim() || !password.trim()) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    setLoading(true);
     try {
-      if (!username || !password) {
-        alert("Please fill all fields");
-        return;
-      }
-
       const res = await fetch("https://dev-mind.onrender.com/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
       });
 
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        data = { message: "Invalid server response" };
-      }
+      const data = await res.json();
+      console.log("Login response:", data); // debug
 
-      console.log("Login response:", data);
-
-      if (res.ok && data.token) {
-        // ✅ store token
-        localStorage.setItem("token", data.token);
-        setIsLogin(true);
-        toast.success("Login Successful ✅");
-
-        // 👉 (optional) redirect later
-        // navigate("/dashboard");
+      if (res.ok) {
+        // Save whatever token field the backend returns
+        const token =
+          data.token ||
+          data.accessToken ||
+          data.access_token ||
+          "authenticated";
+        localStorage.setItem("token", token);
+        toast.success("Welcome back to DevMind! 🎉");
+        setIsLogin(true); // App-level — switches to chat view
       } else {
-        toast.error(data.message || "Login failed ❌");
+        toast.error(
+          data.message || data.error || "Login failed. Check your credentials.",
+        );
       }
     } catch (error) {
-      console.log(error.message);
+      console.error("Login error:", error);
+      toast.error("Network error. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
-    <div className="rightContainer">
-      <h3>SIGN IN</h3>
+    <>
+      <div className="panelLogo" aria-hidden="true">
+        ✦
+      </div>
+      <h3>Welcome back</h3>
+      <p className="panelSub">Sign in to your DevMind account</p>
 
       <div className="inputBox">
-        <input
-          type="name"
-          id="name"
-          className="signInput"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <div className="passBox">
-          <input
-            type={inputType}
-            id="password"
-            className="signInput"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button className="eyeButton" onClick={handleToggle}>
-            {" "}
-            {icon}
-          </button>
+        {/* Email */}
+        <div className="fieldGroup">
+          <label className="fieldLabel" htmlFor="login-email">
+            Email address
+          </label>
+          <div className="fieldWrap">
+            <span className="fieldIconLeft" aria-hidden="true">
+              <User size={15} />
+            </span>
+            <input
+              id="login-email"
+              type="email"
+              className="signInput"
+              placeholder="Username"
+              autoComplete="email"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            />
+          </div>
         </div>
-        <button className="submitBtn" onClick={handleLogin}>
-          Submit
+
+        {/* Password */}
+        <div className="fieldGroup">
+          <label className="fieldLabel" htmlFor="login-password">
+            Password
+          </label>
+          <div className="passBox">
+            <span className="fieldIconLeft" aria-hidden="true">
+              <Lock size={15} />
+            </span>
+            <input
+              id="login-password"
+              type={inputType}
+              className="signInput"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            />
+            <button
+              type="button"
+              className="eyeButton"
+              onClick={handleToggle}
+              aria-label={showPw ? "Hide password" : "Show password"}
+            >
+              {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          </div>
+        </div>
+
+        <a className="forgotLink" href="#" tabIndex={0}>
+          Forgot password?
+        </a>
+
+        {/* Submit */}
+        <button className="submitBtn" onClick={handleLogin} disabled={loading}>
+          {loading ? "Signing in..." : "Continue"}
+          {!loading && <ArrowRight size={16} />}
         </button>
+
+        {/* Switch to Sign Up */}
         <div className="authChecher">
-          <p>Don't Have an account ? </p>
+          <p>Don't have an account?</p>
           <button className="signupLink" onClick={() => setLogin(false)}>
-            Sign Up
+            Sign up free
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
