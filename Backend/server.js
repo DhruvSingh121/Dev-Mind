@@ -10,7 +10,12 @@ const PORT = 8080;
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://dev-mind-eight.vercel.app",
+    origin: [
+      "https://dev-mind-eight.vercel.app",
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "http://localhost:8080",
+    ],
     credentials: true,
   }),
 );
